@@ -1,0 +1,48 @@
+name: CI - Multi Env
+
+on:
+  push:
+    branches:
+      - dev
+      - stage
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build TypeScript
+        run: npm run build
+
+      - name: Run Tests
+        run: npm test
+
+      - name: Deploy
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "🚀 Deploying to Production..."
+          # add production deploy commands here
+
+      - name: Deploy to Staging
+        if: github.ref == 'refs/heads/stage'
+        run: |
+          echo "🚀 Deploying to Staging..."
+          # add staging deploy commands here
+
+      - name: Deploy to Development
+        if: github.ref == 'refs/heads/dev'
+        run: |
+          echo "🚀 Deploying to Development..."
+          # add dev deploy commands here
